@@ -12,7 +12,7 @@ import paymentRouter from './routes/payment.routes.js';
 dotenv.config();
 
 const app = express();
-app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
+app.use(cors({ origin: 'https://booknest-frontend-tawny.vercel.app', credentials: true }));
 app.use(express.json());
 app.use(morgan('dev'));
 
