@@ -12,31 +12,46 @@ import paymentRouter from './routes/payment.routes.js';
 dotenv.config();
 
 const app = express();
-app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
+
+// ✅ Allow both local and deployed frontend origins
+app.use(cors({
+  origin: [
+    'http://localhost:5173', // local development
+    'https://booknest-frontend.vercel.app', // deployed frontend URL (update if different)
+  ],
+  credentials: true
+}));
+
 app.use(express.json());
 app.use(morgan('dev'));
 
+// ✅ Root route for Render health check
+app.get('/', (req, res) => {
+  res.send('BookNest backend is running successfully 🚀');
+});
+
+// ✅ Simple health check route
 app.get('/api/health', (_req, res) => {
   res.json({ success: true, message: 'OK' });
 });
 
+// ✅ API routes
 app.use('/api/auth', authRouter);
 app.use('/api/books', booksRouter);
 app.use('/api/categories', categoriesRouter);
 app.use('/api/cart', cartRouter);
 app.use('/api/payment', paymentRouter);
 
+// ✅ Server startup
 const PORT = process.env.PORT || 5000;
 
-connectToDatabase().then(() => {
-  app.listen(PORT, () => {
-    // eslint-disable-next-line no-console
-    console.log(`Server running on http://localhost:${PORT}`);
+connectToDatabase()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`✅ Server running on port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error('❌ Failed to start server:', err);
+    process.exit(1);
   });
-}).catch((err) => {
-  // eslint-disable-next-line no-console
-  console.error('Failed to start server', err);
-  process.exit(1);
-});
-
-
