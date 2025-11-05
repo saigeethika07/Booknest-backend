@@ -8,6 +8,8 @@ import booksRouter from './routes/books.routes.js';
 import categoriesRouter from './routes/categories.routes.js';
 import cartRouter from './routes/cart.routes.js';
 import paymentRouter from './routes/payment.routes.js';
+import ordersRouter from './routes/orders.routes.js';
+
 
 dotenv.config();
 
@@ -25,6 +27,8 @@ app.use('/api/books', booksRouter);
 app.use('/api/categories', categoriesRouter);
 app.use('/api/cart', cartRouter);
 app.use('/api/payment', paymentRouter);
+app.use('/api/orders', ordersRouter);
+
 
 const PORT = process.env.PORT || 5000;
 
