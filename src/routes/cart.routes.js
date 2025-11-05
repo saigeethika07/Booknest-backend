@@ -32,6 +32,7 @@ function toClientCart(cart, booksById) {
   return { items, subtotal };
 }
 
+// 📦 Get current user's cart
 router.get('/', async (req, res) => {
   try {
     const userId = req.headers['x-user-id'] || req.query.userId || '000000000000000000000000';
@@ -46,6 +47,7 @@ router.get('/', async (req, res) => {
   }
 });
 
+// 🛒 Add or update cart item
 router.post('/', async (req, res) => {
   try {
     const userId = req.headers['x-user-id'] || req.body.userId || '000000000000000000000000';
@@ -71,6 +73,7 @@ router.post('/', async (req, res) => {
   }
 });
 
+// ❌ Remove specific book from cart
 router.delete('/:bookId', async (req, res) => {
   try {
     const userId = req.headers['x-user-id'] || req.query.userId || '000000000000000000000000';
@@ -84,6 +87,17 @@ router.delete('/:bookId', async (req, res) => {
   }
 });
 
+// 🧹 Clear all items from cart (after order confirm)
+router.delete('/clear/all', async (req, res) => {
+  try {
+    const userId = req.headers['x-user-id'] || req.query.userId || '000000000000000000000000';
+    const cart = await getOrCreateCart(userId);
+    cart.items = [];
+    await cart.save();
+    return res.json({ success: true, message: 'Cart cleared successfully' });
+  } catch (e) {
+    return res.status(500).json({ success: false, message: 'Failed to clear cart', error: e.message });
+  }
+});
+
 export default router;
-
-
