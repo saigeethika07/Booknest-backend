@@ -100,4 +100,13 @@ router.delete('/clear/all', async (req, res) => {
   }
 });
 
+router.delete('/clear', async (req, res) => {
+  try {
+    await Cart.deleteMany({});
+    res.json({ success: true, message: 'Cart cleared successfully' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Error clearing cart' });
+  }
+});
+
 export default router;
