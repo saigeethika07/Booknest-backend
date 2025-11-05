@@ -73,20 +73,6 @@ router.post('/', async (req, res) => {
   }
 });
 
-// ❌ Remove specific book from cart
-router.delete('/:bookId', async (req, res) => {
-  try {
-    const userId = req.headers['x-user-id'] || req.query.userId || '000000000000000000000000';
-    const { bookId } = req.params;
-    const cart = await getOrCreateCart(userId);
-    cart.items = cart.items.filter((it) => String(it.bookId) !== String(bookId));
-    await cart.save();
-    return res.json({ success: true });
-  } catch (e) {
-    return res.status(500).json({ success: false, message: 'Failed to remove item', error: e.message });
-  }
-});
-
 // 🧹 Clear all items from cart (after order confirm)
 router.delete('/clear/all', async (req, res) => {
   try {
@@ -109,4 +95,17 @@ router.delete('/clear', async (req, res) => {
   }
 });
 
+// ❌ Remove specific book from cart
+router.delete('/:bookId', async (req, res) => {
+  try {
+    const userId = req.headers['x-user-id'] || req.query.userId || '000000000000000000000000';
+    const { bookId } = req.params;
+    const cart = await getOrCreateCart(userId);
+    cart.items = cart.items.filter((it) => String(it.bookId) !== String(bookId));
+    await cart.save();
+    return res.json({ success: true });
+  } catch (e) {
+    return res.status(500).json({ success: false, message: 'Failed to remove item', error: e.message });
+  }
+});
 export default router;
